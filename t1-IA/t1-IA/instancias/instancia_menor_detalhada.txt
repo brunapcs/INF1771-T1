@@ -1,0 +1,24 @@
+NAME: conrado
+TYPE: TSP
+COMMENT: 11 cities (Dantzig)
+DIMENSION: 11
+EDGE_WEIGHT_TYPE: EXPLICIT
+EDGE_WEIGHT_FORMAT: LOWER_DIAG_ROW 
+DISPLAY_DATA_TYPE: TWOD_DISPLAY
+EDGE_WEIGHT_SECTION
+	
+      1   2   3   4   5   6   7   8   9  10  11
+
+1)    0
+2)    8   0
+3)   39  45   0
+4)   37  47   9   0
+5)   50  49  21  15   0
+6)   61  62  21  20  17   0
+7)   58  60  16  17  18   6   0
+8)   59  60  15  20  26  17  10   0
+9)   62  66  20  25  31  22  15   5   0
+10)  81  81  40  44  50  41  35  24  20   0
+11) 103 107  62  67  72  63  57  46  41  23   0
+DISPLAY_DATA_SECTION
+EOF
