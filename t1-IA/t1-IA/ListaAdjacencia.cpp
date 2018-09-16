@@ -1,4 +1,5 @@
-#include "/Users/brunaparacat1/stdc++.h"
+//#include "/Users/brunaparacat1/stdc++.h"
+#include <bits/stdc++.h>
 #include <string>       // std::string
 #include <iostream>     // std::cout
 #include <sstream>
@@ -81,8 +82,7 @@ vector<vector<pair<int,int> > > le_arquivo(char *file, int* qt_cidades)
     return listaAdjacencia;
 }
 
-vector<vector<pair<int,int> > > copia_superior( vector < vector < pair <int,int> > > listaAdjacencia)
-{
+vector<vector<pair<int,int> > > copia_superior( vector < vector < pair <int,int> > > listaAdjacencia){
     for( int i = 0; i< listaAdjacencia.size() ; i++ ){
         for(int j=i; j<listaAdjacencia.size(); j++){
             if(i != j)
