@@ -2,6 +2,7 @@
 #include   <string.h>
 #include   <memory.h>
 #include   <assert.h>
+using namespace std;
 #include "LISTA.h"
 
 
