@@ -1,5 +1,5 @@
-#include "/Users/brunaparacat1/stdc++.h"
-//#include <bits/stdc++.h>
+//#include "/Users/brunaparacat1/stdc++.h"
+#include <bits/stdc++.h>
 #include <string>       // std::string
 #include <iostream>     // std::cout
 #include <sstream>
@@ -13,7 +13,7 @@ bool sortbysec(const pair<int,int> a, const pair<int,int> b) {
 vector<vector<pair<int,int> > > le_arquivo(char *file, int* qt_cidades){
     ifstream myfile;
     string line;
-    myfile.open("pa561.tsp");
+    myfile.open(myfile);
     
     bool lower = true;
     bool cabecalho = true;

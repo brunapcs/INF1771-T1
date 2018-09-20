@@ -1,6 +1,12 @@
-//#include <bits/stdc++.h>
+#include <bits/stdc++.h>
 
-#include "/Users/brunaparacat1/stdc++.h"
+//FALTA:
+
+//MODULARIZAR
+//LIBERAR MEMORIA (?)
+//MELHORAR SIMULATED ANNEALING (?)
+
+//#include "/Users/brunaparacat1/stdc++.h"
 
 #include <string>       // std::string
 #include <iostream>     // std::cout
@@ -69,7 +75,7 @@ listaSolucao busca_gulosa(matrizCidades listaAdjacencia,listaSolucao sol_Inicial
 				end = 0;
 				break;
 			}
-		}
+        }
 	}
     
     //insere ultima cidade na solucao
@@ -119,23 +125,22 @@ listaSolucao gera_nova_solucao(listaSolucao sol_Inicial){
     
     return nova;
 }
+
+//a partir de solucao inicial s
+//selecionamos aleatoriamente um estado t a partir dos vizinhos de s
+//se eval(t) < eval (s)   s = t
+//se nao , o estado t deve passar em um teste de problabilidade para ver se vai ser aceito
 vector <int> SimulatedAnnealing(listaSolucao solucao)
 {
-    //a partir de solucao inicial s
-    //selecionamos aleatoriamente um estado t a partir dos vizinhos de s
-    //se eval(t) < eval (s)   s = t
-    //se nao , o estado t deve passar em um teste de problabilidade para ver se vai ser aceito
-    
-    cout<< "Latencia inicial:" << eval(solucao)<<endl;
+    cout<< "Latencia antes simulated annealing:" << eval(solucao)<<endl;
     
     listaSolucao nova;
     listaSolucao melhor = solucao;
-    int rep_schedule_M = 25;
-    int A, B;
     int delta;
     int latencia_Ini, latencia_nova ;
-    int temp =100000000;
-    float cooling_rate = 0.001;
+    float temp =10000.0;
+    float cooling_rate = 0.0001;
+    
     for(int m = 0 ; temp> 1 ; m++){
         
         nova=gera_nova_solucao(solucao);
@@ -147,18 +152,18 @@ vector <int> SimulatedAnnealing(listaSolucao solucao)
         
         //se solucao nova tem um custo menor
         if( delta > 0)
-        {
             solucao = nova;
-        }
-        //teste de probabilidade
+        
+        //caso contrario:teste de probabilidade
         else
         {
-            if( exp( (latencia_Ini- latencia_nova) / temp ) > rand() )
+            if( exp( ((float)(latencia_Ini- latencia_nova) )/ temp ) > rand())
                 solucao = nova;
         }
         
         if( eval(solucao) < eval(melhor))
             melhor = solucao;
+        
         temp*=1-cooling_rate;
     }
 
@@ -202,6 +207,7 @@ int main(int argc, char *argv[]){
     //A partir de solucao inicial e lista de Adjacencias Utiliza Algoritmo de Simulated Anealing para encontrar nova solucao
     solucao = SimulatedAnnealing(solucao);
 
+    
     printf("\nTempo de execucao: %.2f  ms \n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 	return 0;
 }
