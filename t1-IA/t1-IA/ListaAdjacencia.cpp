@@ -13,7 +13,7 @@ bool sortbysec(const pair<int,int> a, const pair<int,int> b) {
 vector<vector<pair<int,int> > > le_arquivo(char *file, int* qt_cidades){
     ifstream myfile;
     string line;
-    myfile.open(file);
+    myfile.open("pa561.tsp");
     
     bool lower = true;
     bool cabecalho = true;
