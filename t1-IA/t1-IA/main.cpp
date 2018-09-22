@@ -1,4 +1,4 @@
-//#include <bits/stdc++.h>
+#include <bits/stdc++.h>
 
 //FALTA:
 
@@ -6,13 +6,14 @@
 //LIBERAR MEMORIA (?)
 //MELHORAR SIMULATED ANNEALING (?)
 
-#include "/Users/brunaparacat1/stdc++.h"
+//#include "/Users/brunaparacat1/stdc++.h"
 
 #include <string>       // std::string
 #include <iostream>     // std::cout
 #include <sstream>
 #include "ListaAdjacencia.h"
 #define min(a,b) a<b?a:b
+#define max(a,b) a>b?a:b
 
 using namespace std;
 
@@ -104,15 +105,21 @@ listaSolucao SWAP(listaSolucao solucao, int A, int B )
 }
 
 listaSolucao gera_nova_solucao(listaSolucao sol_Inicial){
-    int A, B;
+    int A = 0, B = 0;
+    int maior_dist_aceita = qt_cidades*0.1;
     listaSolucao nova = sol_Inicial;
     
+    do{
         A = rand() % (sol_Inicial.size()-1);
-        B = A;
-        while(B == A)
-            B=rand() % (sol_Inicial.size()-1);
+    }
+    while (A == 0);
+
+    while(B == A || B == 0 || abs(B-A) > maior_dist_aceita){
+        B = rand() % (sol_Inicial.size()-1);
+    }
         
-        nova = SWAP(nova, A,B );
+    printf("vou trocar %i com %i\n", A, B);
+    nova = SWAP(nova, A,B );
     
     return nova;
 }
@@ -129,38 +136,64 @@ double acceptance_probability(double delta, double temp){
 
 vector <int> SimulatedAnnealing(listaSolucao solucao)
 {
-    cout<< "Latencia antes simulated annealing:" << eval(solucao)<<endl;
+
+    int best_of_all = eval(solucao);
+
+    cout<< "Latencia antes simulated annealing:" << best_of_all <<endl;
     
     listaSolucao nova;
     listaSolucao melhor = solucao;
+
+
     double delta;
     double latencia_Ini, latencia_nova ;
-    double temp =100000.0;
+    double temp =10000.0;
     double cooling_rate = 0.9;
     int aceitou =0;
     int k =0;
     while(temp > 1)
     {
         for(int m =0; m < 30; m++){
-            nova=gera_nova_solucao(solucao);
+
+            nova = gera_nova_solucao(solucao);
+            double random;
+            
             latencia_Ini= eval(solucao);
             latencia_nova = eval(nova);
-            delta = latencia_nova - latencia_Ini ;
+            delta = latencia_nova - latencia_Ini;
+            cout << "delta: " << delta << endl;
             
             double a = acceptance_probability(delta, temp);
+
+            if (delta < 0){
+                best_of_all = latencia_nova;
+                melhor = nova;
+                printf("\t\tTroquei porque era melhor\n");
+
+            }
+            else if (a > (rand() / (random=double(RAND_MAX))) ){
+                cout << "a : " << a << " rand: " << random;
+                printf("\tEra pior, mas troquei \n");
+                melhor = nova;
+            }
+            else{
+                printf("Nao fiz nada\n");
+            }
             
-            if( a > rand() %2)
+            /*if( a > rand() %2 )
                 solucao = nova;
            
-            if( eval(solucao) <= eval(melhor))
+            if( eval(solucao) < = eval(melhor))
                 melhor = solucao;
+            */
         }
         k++;
         temp *= cooling_rate;
     }
-    cout<<" aceitou "<< aceitou<< endl;
-    cout<<" latencia final: "<<eval(melhor)<<endl;
-    return melhor;
+    //cout<<" aceitou "<< aceitou<< endl;
+    cout << "melhor latencia de todas: " << best_of_all << endl;
+    cout<<" latencia final: "<< eval(melhor) <<endl;
+    return melhor; 
 }
 
 
