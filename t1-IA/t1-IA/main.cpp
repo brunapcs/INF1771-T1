@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 
 //FALTA:
 
@@ -6,7 +6,7 @@
 //LIBERAR MEMORIA (?)
 //MELHORAR SIMULATED ANNEALING (?)
 
-//#include "/Users/brunaparacat1/stdc++.h"
+#include "/Users/brunaparacat1/stdc++.h"
 
 #include <string>       // std::string
 #include <iostream>     // std::cout
@@ -90,15 +90,7 @@ listaSolucao caminho_otimo(matrizCidades listaAdjacencia, listaSolucao sol_Inici
 	int menor = INT_MAX;
     int origem =0;
     
-    //verifica qual o primeiro menor caminho e determina cidade de origem
-    for(int i=1; i< qt_cidades; i++){
-        if (listaAdjacencia[i][1].second < menor){
-            menor = listaAdjacencia[i][1].second;
-            origem = i;
-        }
-    }
-    
-    sol_Inicial = busca_gulosa(listaAdjacencia, sol_Inicial, origem);
+    sol_Inicial = busca_gulosa(listaAdjacencia, sol_Inicial, 0);
     return sol_Inicial;
 }
 
@@ -126,6 +118,7 @@ listaSolucao gera_nova_solucao(listaSolucao sol_Inicial){
     return nova;
 }
 
+
 //a partir de solucao inicial s
 //selecionamos aleatoriamente um estado t a partir dos vizinhos de s
 //se eval(t) < eval (s)   s = t
@@ -136,37 +129,40 @@ vector <int> SimulatedAnnealing(listaSolucao solucao)
     
     listaSolucao nova;
     listaSolucao melhor = solucao;
-    int delta;
-    int latencia_Ini, latencia_nova ;
-    float temp =10000.0;
-    float cooling_rate = 0.0001;
-    
-    for(int m = 0 ; temp> 1 ; m++){
-        
-        nova=gera_nova_solucao(solucao);
-        
-        latencia_Ini= eval(solucao);
-        latencia_nova = eval(nova);
-        
-        delta = latencia_Ini- latencia_nova;
-        
-        //se solucao nova tem um custo menor
-        if( delta > 0)
-            solucao = nova;
-        
-        //caso contrario:teste de probabilidade
-        else
-        {
-            if( exp( ((float)(latencia_Ini- latencia_nova) )/ temp ) > rand())
+    double delta;
+    double latencia_Ini, latencia_nova ;
+    double temp =10000.0;
+    double cooling_rate = 1;
+    int aceitou =0;
+    while( temp > 1)
+    {
+        for(int k =0; k < 30; k++){
+            nova=gera_nova_solucao(solucao);
+            
+            latencia_Ini= eval(solucao);
+            latencia_nova = eval(nova);
+            delta = latencia_nova - latencia_Ini ;
+            
+            int random =  rand() % 2;
+            //printf( "delta:%lf  exp:%lf \n random: %d" ,delta, exp((latencia_Ini-latencia_nova)/temp), random);
+            
+            if(delta <=0 )
                 solucao = nova;
-        }
-        
-        if( eval(solucao) < eval(melhor))
-            melhor = solucao;
-        
-        temp*=1-cooling_rate;
-    }
+            else
+            {
+                if(exp(-delta/temp) > rand() % 100)
+                {
+                    aceitou++;
 
+                }
+            }
+            
+            if( eval(solucao) <= eval(melhor))
+                melhor = solucao;
+        }
+        temp -= cooling_rate;
+    }
+    cout<<" aceitou "<< aceitou<< endl;
     cout<<" latencia final: "<<eval(melhor)<<endl;
     return melhor;
 }
@@ -206,7 +202,7 @@ int main(int argc, char *argv[]){
     
     //A partir de solucao inicial e lista de Adjacencias Utiliza Algoritmo de Simulated Anealing para encontrar nova solucao
     solucao = SimulatedAnnealing(solucao);
-
+   // imprime(solucao);
     
     printf("\nTempo de execucao: %.2f  ms \n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 	return 0;

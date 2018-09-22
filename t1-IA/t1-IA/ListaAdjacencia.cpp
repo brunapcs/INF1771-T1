@@ -1,5 +1,5 @@
-//#include "/Users/brunaparacat1/stdc++.h"
-#include <bits/stdc++.h>
+#include "/Users/brunaparacat1/stdc++.h"
+//#include <bits/stdc++.h>
 #include <string>       // std::string
 #include <iostream>     // std::cout
 #include <sstream>
@@ -13,7 +13,7 @@ bool sortbysec(const pair<int,int> a, const pair<int,int> b) {
 vector<vector<pair<int,int> > > le_arquivo(char *file, int* qt_cidades){
     ifstream myfile;
     string line;
-    myfile.open(myfile);
+    myfile.open("dantzig42.tsp");
     
     bool lower = true;
     bool cabecalho = true;
@@ -54,15 +54,34 @@ vector<vector<pair<int,int> > > le_arquivo(char *file, int* qt_cidades){
                 }
                 
                 x = stoi(aux);    //strig to integer
-                
-                listaAdjacencia[id_cidade].push_back((make_pair(count_cidade, x)));
-                
-                if (x != 0)
-                    count_cidade++;
-                
-                else {
+                if (lower){
+                    listaAdjacencia[id_cidade].push_back((make_pair(count_cidade, x)));
+                    
+                    if (x != 0)
+                        count_cidade++;
+                    
+                    else {
+                        id_cidade++;
+                        count_cidade = 0;
+                    }
+                }
+                else{
+                    if(id_cidade == count_cidade){
+                        listaAdjacencia[id_cidade].push_back(make_pair(id_cidade, 0));
+                        id_cidade++;
+                        listaAdjacencia[id_cidade].push_back(make_pair(count_cidade, x));
+                    }
+                    else{
+                        listaAdjacencia[id_cidade].push_back(make_pair(count_cidade,x));
+                    }
+                    
                     id_cidade++;
-                    count_cidade = 0;
+                    
+                    if(id_cidade == *qt_cidades){
+                        count_cidade++;
+                        id_cidade = count_cidade;
+                    }
+                    
                 }
             }
         }
