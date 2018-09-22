@@ -143,7 +143,6 @@ vector <int> SimulatedAnnealing(listaSolucao solucao)
             latencia_nova = eval(nova);
             delta = latencia_nova - latencia_Ini ;
             
-            int random =  rand() % 2;
             //printf( "delta:%lf  exp:%lf \n random: %d" ,delta, exp((latencia_Ini-latencia_nova)/temp), random);
             
             if(delta <=0 )
@@ -152,6 +151,7 @@ vector <int> SimulatedAnnealing(listaSolucao solucao)
             {
                 if(exp(-delta/temp) > rand() % 100)
                 {
+                    solucao=nova; 
                     aceitou++;
 
                 }
