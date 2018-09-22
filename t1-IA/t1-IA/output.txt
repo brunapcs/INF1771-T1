@@ -2,7 +2,7 @@
  solucao inicial: 0 --> 40 --> 41 --> 1 --> 39 --> 38 --> 37 --> 36 --> 34 --> 33 --> 30 --> 29 --> 31 --> 32 --> 28 --> 27 --> 26 --> 25 --> 24 --> 23 --> 9 --> 8 --> 7 --> 6 --> 5 --> 4 --> 3 --> 2 --> 35 --> 20 --> 21 --> 22 --> 16 --> 15 --> 17 --> 18 --> 19 --> 12 --> 13 --> 14 --> 11 --> 10 --> 
 
 Latencia antes simulated annealing:13514
- aceitou 2831
- latencia final: 13157
+ aceitou 0
+ latencia final: 13514
 
-Tempo de execucao: 1.29  ms 
+Tempo de execucao: 13.04  ms 

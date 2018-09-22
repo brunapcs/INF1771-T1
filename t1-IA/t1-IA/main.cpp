@@ -23,7 +23,6 @@ typedef  vector <int> listaSolucao;
 int qt_cidades = 0;
 matrizCidades matriz_lida;
 
-
 void imprime(listaSolucao solucao){
     for(int i=0; i< qt_cidades; i++)
     {
@@ -119,10 +118,15 @@ listaSolucao gera_nova_solucao(listaSolucao sol_Inicial){
 }
 
 
-//a partir de solucao inicial s
-//selecionamos aleatoriamente um estado t a partir dos vizinhos de s
-//se eval(t) < eval (s)   s = t
-//se nao , o estado t deve passar em um teste de problabilidade para ver se vai ser aceito
+double acceptance_probability(double delta, double temp){
+    //se for negativa ou seja, o eval(nova) < eval(antiga) a prob sempre sera um numero positivo grande
+    //se for positiva a prob sera um numero muito pequeno
+    
+        double prob = exp(-delta/temp);
+    return prob;
+    
+}
+
 vector <int> SimulatedAnnealing(listaSolucao solucao)
 {
     cout<< "Latencia antes simulated annealing:" << eval(solucao)<<endl;
@@ -131,36 +135,28 @@ vector <int> SimulatedAnnealing(listaSolucao solucao)
     listaSolucao melhor = solucao;
     double delta;
     double latencia_Ini, latencia_nova ;
-    double temp =10000.0;
-    double cooling_rate = 1;
+    double temp =100000.0;
+    double cooling_rate = 0.9;
     int aceitou =0;
-    while( temp > 1)
+    int k =0;
+    while(temp > 1)
     {
-        for(int k =0; k < 30; k++){
+        for(int m =0; m < 30; m++){
             nova=gera_nova_solucao(solucao);
-            
             latencia_Ini= eval(solucao);
             latencia_nova = eval(nova);
             delta = latencia_nova - latencia_Ini ;
             
-            //printf( "delta:%lf  exp:%lf \n random: %d" ,delta, exp((latencia_Ini-latencia_nova)/temp), random);
+            double a = acceptance_probability(delta, temp);
             
-            if(delta <=0 )
+            if( a > rand() %2)
                 solucao = nova;
-            else
-            {
-                if(exp(-delta/temp) > rand() % 100)
-                {
-                    solucao=nova; 
-                    aceitou++;
-
-                }
-            }
-            
+           
             if( eval(solucao) <= eval(melhor))
                 melhor = solucao;
         }
-        temp -= cooling_rate;
+        k++;
+        temp *= cooling_rate;
     }
     cout<<" aceitou "<< aceitou<< endl;
     cout<<" latencia final: "<<eval(melhor)<<endl;
