@@ -1,22 +1,14 @@
 //#include <bits/stdc++.h>
-
-//FALTA:
-
-//MODULARIZAR
-//LIBERAR MEMORIA (?)
-//MELHORAR SIMULATED ANNEALING (?)
-
 #include "/Users/brunaparacat1/stdc++.h"
 
 #include <string>       // std::string
 #include <iostream>     // std::cout
 #include <sstream>
-#include "ListaAdjacencia.h"
+#include "leitura.h"
 #define min(a,b) a<b?a:b
 #define max(a,b) a>b?a:b
 
 using namespace std;
-
 
 typedef  vector < vector < pair <int,int> > > matrizCidades;
 typedef  vector <int> listaSolucao;
@@ -114,11 +106,9 @@ listaSolucao gera_nova_solucao(listaSolucao sol_Inicial){
     }
     while (A == 0);
 
-    while(B == A || B == 0 || abs(B-A) > maior_dist_aceita){
+    while(B == A || B == 0 || abs(B-A) > maior_dist_aceita)
         B = rand() % (sol_Inicial.size()-1);
-    }
-        
-   // printf("vou trocar %i com %i\n", A, B);
+    
     nova = SWAP(nova, A,B );
     
     return nova;
@@ -126,9 +116,6 @@ listaSolucao gera_nova_solucao(listaSolucao sol_Inicial){
 
 
 double acceptance_probability(double delta, double temp){
-    //se for negativa ou seja, o eval(nova) < eval(antiga) a prob sempre sera um numero positivo grande
-    //se for positiva a prob sera um numero muito pequeno
-    
         double prob = exp(-delta/temp);
     return prob;
     
@@ -136,54 +123,45 @@ double acceptance_probability(double delta, double temp){
 
 vector <int> SimulatedAnnealing(listaSolucao solucao)
 {
-
     int best_of_all = eval(solucao);
-
-    cout<< "Latencia antes simulated annealing:" << best_of_all <<endl;
+    cout<<endl<<"Latencia antes simulated annealing:" << best_of_all <<endl;
     
     listaSolucao nova;
     listaSolucao melhor = solucao;
-
-
     double delta;
     double latencia_Ini, latencia_nova ;
     double temp =10000.0;
     double cooling_rate = 1;
-    int k =0;
+    double random;
+    double a;
+    
     while(temp > 1)
     {
         solucao = melhor;
         for(int m =0; m < 30; m++){
 
             nova = gera_nova_solucao(solucao);
-            double random;
-            
+           
             latencia_Ini= eval(solucao);
             latencia_nova = eval(nova);
             delta = latencia_nova - latencia_Ini;
-            //cout << "delta: " << delta << endl;
             
-            double a = acceptance_probability(delta, temp);
-
-            if (delta < 0){
+            a = acceptance_probability(delta, temp);
+            if(delta < 0){
                 best_of_all = latencia_nova;
                 solucao = nova;
             }
             else if (a > (rand() / (random=double(RAND_MAX))) ){
                 solucao = nova;
             }
-            printf("%lf ", eval(melhor));
-            printf( "\t %lf \n" , temp);
-        
+            
             if(eval(solucao)< eval(melhor))
                 melhor = solucao;
         }
-        k++;
+    
         temp -= cooling_rate;
     }
- 
-    cout << "melhor latencia de todas: " << best_of_all << endl;
-    cout<<" latencia final: "<< eval(melhor) <<endl;
+    cout<<endl<<" Latencia final: "<< eval(melhor) <<endl;
     return melhor; 
 }
 
@@ -194,7 +172,6 @@ int main(int argc, char *argv[]){
 
     matrizCidades matriz_ordenada;
     listaSolucao solucao;
-    
     
     //leitura do arquivo
 	matriz_lida = le_arquivo(argv[1], &qt_cidades);
@@ -207,6 +184,8 @@ int main(int argc, char *argv[]){
     matriz_lida= copia_superior(matriz_lida);
     matriz_ordenada = copia_superior(matriz_ordenada);
     
+    imprime_listaAdjacencia(matriz_lida);
+
     // Ordenacao de listaAdjacencia
     for (int i = 0; i < matriz_ordenada.size(); i++){
 		sort(matriz_ordenada[i].begin(), matriz_ordenada[i].end(), sortbysec);
@@ -217,13 +196,15 @@ int main(int argc, char *argv[]){
     //Constroi Solucao inicial utilizando algoritmo guloso e matriz ordenada
     solucao = caminho_otimo(matriz_ordenada,solucao);
     
-    cout<<" solucao inicial: ";
+    cout<<" Solucao inicial: "<<endl;
     imprime(solucao);
-    
+    cout<<endl <<" ***************** "<<endl;
     //A partir de solucao inicial e lista de Adjacencias Utiliza Algoritmo de Simulated Anealing para encontrar nova solucao
     solucao = SimulatedAnnealing(solucao);
-   // imprime(solucao);
+   
+    cout<<endl<<" SOLUCAO FINAL:"<<endl;
+    imprime(solucao);
     
-    printf("\nTempo de execucao: %.2f  ms \n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    printf("\nTempo de execucao: %.2f  s \n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 	return 0;
 }

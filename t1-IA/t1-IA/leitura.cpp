@@ -3,7 +3,7 @@
 #include <string>       // std::string
 #include <iostream>     // std::cout
 #include <sstream>
-#include "ListaAdjacencia.h"
+#include "leitura.h"
 
 
 bool sortbysec(const pair<int,int> a, const pair<int,int> b) {
